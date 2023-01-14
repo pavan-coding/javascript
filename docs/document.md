@@ -1,62 +1,15 @@
-demo heading
+JavaScript Tutorials:
 
-# this is heading
-
-![img](./images/code.png)
-
-demo
-
-demo
-
-demo
-
-demo
-
-demo
-
-demo
-
-demo
-
-demo
-
-demod
-
-ed
-
-dme
-
-djd
-
-d
-
-d
+Concepts:
 
 
-d
+**1. Js — short term
 
-d
+1. “Up & Going”
+2. “Scope & Closures”
+3. “this & Object Prototypes”
+4. “Types & Grammar”
+5. “Async & Performance”
+6. “ES6 & Beyond”
 
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-d
-
-[heading](#this-is-heading)
+**

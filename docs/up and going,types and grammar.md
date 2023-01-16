@@ -9,3 +9,10 @@
   * es6 & beyond
 
 Concepts:
+
+* basics
+* types
+* values
+* natives
+* coercion
+* grammar

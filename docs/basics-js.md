@@ -7,6 +7,9 @@
   * [comments](#comments)
   * [variables](#variables)
   * [operators](#operators)
+  * [conditional statements](#conditional-statements)
+  * [loops](#loops)
+  * [loop control statements](#loop-control-statements)
 
 ---
 
@@ -418,7 +421,7 @@ for(  i=0;i<5;i++) {
 
 # Operators
 
-there are 6 types of operator in javascript
+there are 7 types of operator in javascript
 
 * Arithmetic Operators
 * Assignment Operators
@@ -426,3 +429,305 @@ there are 6 types of operator in javascript
 * Logical Operators
 * Conditional Operators
 * Type Operators
+* Bitwise Opertors
+
+**Arithmetic Operators**:
+
+| Operator | Description         |
+| -------- | ------------------- |
+| +        | Addition            |
+| -        | Subtraction         |
+| *        | Multiplication      |
+| **       | Exponentiation      |
+| /        | Division            |
+| %        | Modulus (Remainder) |
+| ++       | Increment           |
+| --       | Decrement           |
+
+**Assignment Operators**:
+
+there are 4 categories
+
+* Arithmetic assignment operator
+* Shift Assignment Operator
+* Logical Assignment Operator
+* Bitwise Assignment Operator
+
+Arithmetic Assignment Operator:
+
+| Operator | Example |
+| -------- | ------- |
+| =        | x = y   |
+| +=       | x += y  |
+| -=       | x -= y  |
+| *=       | x *= y  |
+| /=       | x /= y  |
+| %=       | x %= y  |
+| **=      | x **= y |
+
+Shift assignment Operator:
+
+Note:
+
+ ">>>" is unsigned right shift
+
+| Operator | Example  | Same As     | example                           |
+| -------- | -------- | ----------- | --------------------------------- |
+| <<=      | x <<= y  | x = x << y  | let x=-100<br />x<<=5//-3200      |
+| >>=      | x >>= y  | x = x >> y  | let x=-100<br />x>>=5//-4         |
+| >>>=     | x >>>= y | x = x >>> y | let x=-100<br />x>>>=5//134217724 |
+
+Bitwise Assignment Operator:
+
+| Operator | Example | Same As   |
+| -------- | ------- | --------- |
+| &=       | x &= y  | x = x & y |
+| ^=       | x ^= y  | x = x ^ y |
+| l =      | x l = y | x=x l y   |
+
+Logical Assignment Operator:(es 2020)
+
+| Operator | Example  | Same As          |
+| -------- | -------- | ---------------- |
+| &&=      | x &&= y  | x = x && (x = y) |
+| ll=      | x ll = y | x = x ll (x=y)   |
+| ??=      | x ??= y  | x = x ?? (x = y) |
+
+&& : logical and is used
+
+if the first value is true the second value is assigned
+
+||: logical or is used
+
+if the first value is false the second value is assigned
+
+??:**Nullish coalescing assignment operator** is used
+
+if the first value is null or undefined then the second value is assigned.
+
+**Comparision Operator**:
+
+let x=5
+
+Note: "===" not only compare value but also compare the type of value.
+
+| Operator | Description                       | Comparing | Returns |
+| -------- | --------------------------------- | --------- | ------- |
+| ==       | equal to                          | x == 8    | false   |
+|          |                                   | x == 5    | true    |
+|          |                                   | x == "5"  | true    |
+| ===      | equal value and equal type        | x === 5   | true    |
+|          |                                   | x === "5" | false   |
+| !=       | not equal                         | x != 8    | true    |
+| !==      | not equal value or not equal type | x !== 5   | false   |
+|          |                                   | x !== "5" | true    |
+|          |                                   | x !== 8   | true    |
+| >        | greater than                      | x > 8     | false   |
+| <        | less than                         | x < 8     | true    |
+| >=       | greater than or equal to          | x >= 8    | false   |
+| <=       | less than or equal to             | x <= 8    | true    |
+
+**Logical Operator**:
+
+| Operator | Description |
+| -------- | ----------- |
+| &&       | logical and |
+| ll       | logical or  |
+| !        | logical not |
+
+these operators are used with comparision operators to make conditions in programming.
+
+**Conditional Operator**:
+
+Condition ? true statement ? false Statement?;
+
+**Type Operator**:
+
+| Operator   | Description                                                |
+| ---------- | ---------------------------------------------------------- |
+| typeof     | Returns the type of a variable                             |
+| instanceof | Returns true if an object is an instance of an object type |
+
+**bitwise Operator**:
+
+| Operator | Description          | Example | Same as     | Result | Decimal |
+| -------- | -------------------- | ------- | ----------- | ------ | ------- |
+| &        | AND                  | 5 & 1   | 0101 & 0001 | 0001   | 1       |
+| l        | Or                   | 5 l 1   | 0101 l 0001 | 0101   | 5       |
+| ~        | NOT                  | ~ 5     | ~0101       | 1010   | 10      |
+| ^        | XOR                  | 5 ^ 1   | 0101 ^ 0001 | 0100   | 4       |
+| <<       | left shift           | 5 << 1  | 0101 << 1   | 1010   | 10      |
+| >>       | right shift          | 5 >> 1  | 0101 >> 1   | 0010   | 2       |
+| >>>      | unsigned right shift | 5 >>> 1 | 0101 >>> 1  | 0010   | 2       |
+
+# Conditional Statements:
+
+the conditional statements are 
+
+* if
+* if else
+* else if
+* switch
+
+the conditional statements are similar to statement in c. the syntax is given below
+
+```javascript
+if (condition) {
+  //  block of code to be executed if the condition is true
+}
+```
+
+```javascript
+if (condition) {
+  //  block of code to be executed if the condition is true
+} else {
+  //  block of code to be executed if the condition is false
+}
+```
+
+```javascript
+if (condition1) {
+  //  block of code to be executed if condition1 is true
+} else if (condition2) {
+  //  block of code to be executed if the condition1 is false and condition2 is true
+} else {
+  //  block of code to be executed if the condition1 is false and condition2 is false
+}
+```
+
+```javascript
+switch(expression) {
+  case x:
+    // code block
+    break;
+  case y:
+    // code block
+    break;
+  default:
+    // code block
+}
+```
+
+# Loops
+
+the Loops statements are 
+
+* for
+* while
+* do while
+
+the syntax is similar to c program. syntax is given below.
+
+```javascript
+for (expression 1; expression 2; expression 3) {
+  // code block to be executed
+}
+//example:
+for(let i=0;i<10;i++){
+}
+```
+
+```javascript
+while (condition) {
+  // code block to be executed
+}
+```
+
+```javascript
+do {
+  // code block to be executed
+}
+while (condition);
+```
+
+# loop control statements
+
+ the loop control statements are 
+
+* break
+* continue
+* labels
+
+some examples are given below
+
+```javascript
+for (let i = 0; i < 10; i++) {
+  if (i === 3) { break; }
+  text += "The number is " + i + "<br>";
+}
+/*
+output:
+The number is 0
+The number is 1
+The number is 2 */
+```
+
+```javascript
+for (let i = 0; i < 10; i++) {
+  if (i === 3) { continue; }
+  text += "The number is " + i + "<br>";
+}
+/*output:
+The number is 0
+The number is 1
+The number is 2
+The number is 4
+The number is 5
+The number is 6
+The number is 7
+The number is 8
+The number is 9 */
+```
+
+labels with continue:
+
+```javascript
+let i, j;
+
+loop1:
+for (i = 0; i < 3; i++) {      //The first for statement is labeled "loop1"
+  loop2:
+  for (j = 0; j < 3; j++) {   //The second for statement is labeled "loop2"
+    if (i === 1 && j === 1) {
+      continue loop1;
+    }
+    console.log(`i = ${i}, j = ${j}`);
+  }
+}
+
+// Logs:
+// i = 0, j = 0
+// i = 0, j = 1
+// i = 0, j = 2
+// i = 1, j = 0
+// i = 2, j = 0
+// i = 2, j = 1
+// i = 2, j = 2
+```
+
+labels with break:
+
+```javascript
+top:
+for (i = 0; i < 4; i++) {
+    demo:
+  for (j = 0; j < 4; j++) {
+     if(j==3){
+        break demo;
+     
+    }
+    if(j==2 && i==2)
+    break top;
+    console.log(i+" "+j)
+  }
+}
+/*output
+0 0
+0 1
+0 2
+1 0
+1 1
+1 2
+2 0
+2 1*/
+```

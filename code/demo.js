@@ -1,12 +1,17 @@
-let i, j;
+let room = {
+    number: 23
+  };
+  
+  let meetup = {
+    title: "Conference",
+    participants: ["john", "ann"]     
+  };
+  meetup.place = room;       // meetup references room
+  room.occupiedBy = meetup;// room references meetup
 
-loop1:
-for (i = 0; i < 3; i++) {      //The first for statement is labeled "loop1"
-  loop2:
-  for (j = 0; j < 3; j++) {   //The second for statement is labeled "loop2"
-    if (i === 1 && j === 1) {
-      continue loop2;
-    }
-    console.log(`i = ${i}, j = ${j}`);
-  }
-}
+  console.log( JSON.stringify(meetup, function replacer(key, value) {
+    return (key == 'occupiedBy') ? undefined : value;
+  }));
+   console.log( JSON.stringify(room, function replacer(key, value) {
+        return (key == 'place')?undefined : value;
+  }));

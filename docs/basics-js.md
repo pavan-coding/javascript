@@ -10,6 +10,9 @@
   * [conditional statements](#conditional-statements)
   * [loops](#loops)
   * [loop control statements](#loop-control-statements)
+  * [blocks and functions](#blocks-and-functions)
+  * [json](#json)
+  * [read input in js](#readline-sync)
 
 ---
 
@@ -562,7 +565,7 @@ Condition ? true statement ? false Statement?;
 
 # Conditional Statements:
 
-the conditional statements are 
+the conditional statements are
 
 * if
 * if else
@@ -610,7 +613,7 @@ switch(expression) {
 
 # Loops
 
-the Loops statements are 
+the Loops statements are
 
 * for
 * while
@@ -642,7 +645,7 @@ while (condition);
 
 # loop control statements
 
- the loop control statements are 
+ the loop control statements are
 
 * break
 * continue
@@ -714,7 +717,7 @@ for (i = 0; i < 4; i++) {
   for (j = 0; j < 4; j++) {
      if(j==3){
         break demo;
-     
+   
     }
     if(j==2 && i==2)
     break top;
@@ -730,4 +733,676 @@ for (i = 0; i < 4; i++) {
 1 2
 2 0
 2 1*/
+```
+
+# Blocks and Functions
+
+js uses blocks to run a piece of code without changing the value of variable and use other value for the same variable name. can be used with let or const.
+
+```javascript
+let demo=100;
+{
+    let demo=120;
+    console.log(demo);
+}
+console.log(demo);
+/*output:
+120
+100*/
+```
+
+Note:
+
+using var will change the global value because it has functional scope. so use let or const if you want same variable name with different value for some procedure.
+
+**functions:**
+
+A JavaScript function is defined with the `function` keyword, followed by a  **name** , followed by parentheses  **()** .
+
+Function names can contain letters, digits, underscores, and dollar signs (same rules as variables).
+
+The parentheses may include parameter names separated by commas:
+**( *parameter1, parameter2, ...* )**
+
+The code to be executed, by the function, is placed inside curly brackets: **{}**
+
+the syntax is given as
+
+```javascript
+function name(parameter1, parameter2, parameter3) {
+  // code to be executed
+}
+```
+
+to invoke the function call name(1,1,1)
+
+we can also give default value for the function in javascript.
+
+```javascript
+function showMessage(name, text = "no text given") {
+  console.log( name + ": " + text );
+}
+
+showMessage("Ann");
+```
+
+the showMessage method can be invoked with showMessage("Ann") or showMessage("Ann,"text given")
+
+we can return the values with the help of 'return value' statement.
+
+**Never add a newline between** `return` **and the value**
+
+For a long expression in `return`, it might be tempting to put it on a separate line, like this:
+
+```javascript
+return
+ (some + long + expression + or + whatever * f(a) + f(b))
+```
+
+That doesn't work, because JavaScript assumes a semicolon after `return`. That’ll work the same as:
+
+```javascript
+return;
+ (some + long + expression + or + whatever * f(a) + f(b))
+```
+
+So, it effectively becomes an empty return.
+
+If we want the returned expression to wrap across multiple lines, we should start it at the same line as `return`. Or at least put the opening parentheses there as follows:
+
+```javascript
+return (
+  some + long + expression
+  + or +
+  whatever * f(a) + f(b)
+  )
+
+```
+
+**function with unknown parameter**:
+
+```javascript
+function demo(){
+    console.log(arguments.length);
+    console.log(arguments[0]);
+}
+demo(1,2);
+//output 
+//2
+//1
+//or
+function demo(...demoname){
+    console.log(demoname.length);
+    console.log(demoname[0]);
+}
+demo(1,2);
+```
+
+**function Expression**:
+
+There is another way for creating function other than declartion that is function expression
+
+```javascript
+let a= function(a,b){
+    return a+b;
+}
+console.log(a(1,2))
+//output is 3
+```
+
+we can also assign function to a variable
+
+```javascript
+function demo(a,b){
+    return a+b;
+}
+let a= demo;
+console.log(a(1,2))
+//output: 3
+```
+
+**Callback Function**:
+
+callback function is nothing but passing function as argument.
+
+```javascript
+function ask(question, yes, no) {
+  if (confirm(question)) yes()
+  else no();
+}
+
+function showOk() {
+  console.log( "You agreed." );
+}
+
+function showCancel() {
+  console.log( "You canceled the execution." );
+}
+
+// usage: functions showOk, showCancel are passed as arguments to ask
+ask("Do you agree?", showOk, showCancel);
+```
+
+or you can directly pass the function to it
+
+```javascript
+function ask(question, yes, no) {
+  if (confirm(question)) yes()
+  else no();
+}
+
+ask(
+  "Do you agree?",
+  function() { alert("You agreed."); },
+  function() { alert("You canceled the execution."); }
+);
+```
+
+Note: hoisting can be done on function decleration but not on the function expression.
+
+**Arrow Function**:
+
+the syntax for arrow function is given below
+
+```javascript
+let func = function(arg1, arg2, ..., argN) {
+  return expression;
+};
+```
+
+the arrow function can be use without function word and with one arguments also.
+
+```javascript
+let a= (a,b)=>{
+    return a+b;
+}
+console.log(a(1,2))
+//output will be 3
+```
+
+arrow function with only one argument
+
+```javascript
+let a= a=>{
+    return a;
+}
+console.log(a(1))
+//or
+let a=(a)=>{
+    return a;
+}
+console.log(a(1))
+ 
+```
+
+more than one argument it is mandatory to use '()' brackets.
+
+single line arrow function.
+
+```javascript
+let a= a=> a*2;
+
+console.log(a(1))
+//output is 2
+//or
+let a= (a,b)=>a+b;
+console.log(a(1,2))
+//output is 3
+```
+
+in single line arrow function return statement is not required and also we can't keep and should not keep the return statement.
+
+by default it will take the parameters and return the value of the expression.
+
+if there is no parameter then the arrow function should have empty brackets
+
+```javascript
+let a=()=> alert("demo")
+```
+
+**Function Constructor**:
+
+```javascript
+const myFunction = new Function("a", "b", "return a * b");
+
+let x = myFunction(4, 3);
+```
+
+using function constructor is not recommended.
+
+**Function Hoisting**:
+
+hositing can be done for only function declarations only.
+
+```javascript
+myFunction(5);
+
+function myFunction(y) {
+  return y * y;
+}
+```
+
+**Self-invoking Function**:
+
+Function expressions can be made "self-invoking".
+
+A self-invoking expression is invoked (started) automatically, without being called.
+
+Function expressions will execute automatically if the expression is followed by ().
+
+You cannot self-invoke a function declaration.
+
+You have to add parentheses around the function to indicate that it is a function expression:
+
+```javascript
+(function () {
+  let x = "Hello!!";  // I will invoke myself
+})();
+//or
+(()=> {
+    let x = "Hello!!";  // I will invoke myself
+  })();
+//or 
+( var a=function () {
+    let x = "Hello!!";  // I will invoke myself
+  })();
+```
+
+you can write self invoking function with anonymous function and arrow function and function expression.
+
+# Json
+
+* JSON stands for **J**ava**S**cript **O**bject **N**otation
+* JSON is a lightweight data-interchange format
+* JSON is plain text written in JavaScript object notation
+* JSON is used to send data between computers
+* JSON is language independent.
+
+## Why Use JSON?
+
+The JSON format is syntactically similar to the code for creating JavaScript objects. Because of this, a JavaScript program can easily convert JSON data into JavaScript objects.
+
+Since the format is text only, JSON data can easily be sent between computers, and used by any programming language.
+
+JavaScript has a built in function for converting JSON strings into JavaScript objects:
+
+`JSON.parse()`
+
+JavaScript also has a built in function for converting an object into a JSON string:
+
+`JSON.stringify()`
+
+You can receive pure text from a server and use it as a JavaScript object.
+
+You can send a JavaScript object to a server in pure text format.
+
+You can work with data as JavaScript objects, with no complicated parsing and translations.
+
+**Json Syntax:**
+
+* Data is in name/value pairs
+* Data is separated by commas
+* Curly braces hold objects
+* Square brackets hold arrays
+
+# JSON Data - A Name and a Value
+
+JSON data is written as name/value pairs (aka key/value pairs).
+
+A name/value pair consists of a field name (in double quotes), followed by a colon, followed by a value:
+
+### Example
+
+**"name"**:**"John"**
+
+> JSON names require double quotes
+
+## JSON Values
+
+In  **JSON** , *values* must be one of the following data types:
+
+* a string
+* a number
+* an object
+* an array
+* a boolean
+* null
+
+In **JavaScript** values can be all of the above, plus any other valid JavaScript expression, including:
+
+* a function
+* a date
+* undefined
+
+the Above value cannot be used by json.
+
+> In JSON, *string values* must be written with double quotes where as in js we can write string as single and double quotes.
+
+## JSON Strings
+
+Strings in JSON must be written in double quotes.
+
+### Example
+
+**{**"name"**:**"John"**}**
+
+## JSON Numbers
+
+Numbers in JSON must be an integer or a floating point.
+
+### Example
+
+**{**"age"**:**30**}**
+
+## JSON Objects
+
+Values in JSON can be objects.
+
+### Example
+
+**{**
+"employee"**:{**"name"**:**"John"**,** **"age"**:**30**, **"city"**:**"New York"**}
+}
+
+Objects as values in JSON must follow the JSON syntax.
+
+## JSON Arrays
+
+Values in JSON can be arrays.
+
+### Example
+
+**{**
+"employees"**:[**"John"**,** **"Anna"**, **"Peter"**]
+}
+
+## JSON Booleans
+
+Values in JSON can be true/false.
+
+### Example
+
+**{**"sale"**:**true**}**
+
+## JSON null
+
+Values in JSON can be null.
+
+### Example
+
+**{**"middlename"**:**null**}**
+
+# Json.Parse()
+
+A common use of JSON is to exchange data to/from a web server.
+
+When receiving data from a web server, the data is always a string.
+
+Parse the data with `JSON.parse()`, and the data becomes a JavaScript object.
+
+> Make sure the text is in JSON format, or else you will get a syntax error.
+
+Use the JavaScript function `JSON.parse()` to convert text into a JavaScript object:
+
+**const** **obj = JSON.**parse**(**'{"name":"John", "age":30, "city":"New York"}'**);**
+
+Note:
+
+Date objects are not allowed in JSON.
+
+If you need to include a date, write it as a string.
+
+You can convert it back into a date object later
+
+```javascript
+const text = '{"name":"John", "birth":"1986-12-14", "city":"New York"}';
+const obj = JSON.parse(text);
+obj.birth = new Date(obj.birth);
+```
+
+Or, you can use the second parameter, of the `JSON.parse()` function, called  *reviver* .
+
+The *reviver* parameter is a function that checks each property, before returning the value.
+
+```javascript
+const text = '{"name":"John", "birth":"1986-12-14", "city":"New York"}';
+const obj = JSON.parse(text, function (key, value) {
+  if (key == "birth") {
+    return new Date(value);
+  } else {
+    return value;
+  }
+});
+
+```
+
+# JSON.stringify()
+
+A common use of JSON is to exchange data to/from a web server.
+
+When sending data to a web server, the data has to be a string.
+
+Convert a JavaScript object into a string with `JSON.stringify()`.
+
+## Stringify a JavaScript Object
+
+Syntax: JSON.stringify(value, replacer,space )
+
+replacer: array of properties to encode or a mapping function(key,value)
+
+space: amount of space use for formatting.
+
+Imagine we have this object in JavaScript:
+
+**const** **obj = {name:** **"John"**, age: **30**, city: **"New York"**};
+
+Use the JavaScript function `JSON.stringify()` to convert it into a string.
+
+**const** **myJSON = JSON.**stringify**(obj);**
+
+The result will be a string following the JSON notation.
+
+### Stringify Dates
+
+In JSON, date objects are not allowed. The `JSON.stringify()` function will convert any dates into strings.
+
+### Example
+
+```javascript
+const obj = {name: "John", today: new Date(), city : "New York"};
+const myJSON = JSON.stringify(obj);
+```
+
+the above method display date in string format
+
+NOTE:
+
+It is a common mistake to call a JSON object literal "a JSON object".
+
+JSON cannot be an object. JSON is a string format.
+
+The data is only JSON when it is in a string format. When it is converted to a JavaScript variable, it becomes a JavaScript object.
+
+Accessing Object Values:
+
+```javascript
+const myJSON = '{"name":"John", "age":30, "car":null}';
+const myObj = JSON.parse(myJSON);
+x = myObj.name;
+//or
+const myJSON = '{"name":"John", "age":30, "car":null}';
+const myObj = JSON.parse(myJSON);
+x = myObj["name"];
+
+```
+
+The important limitation: there must be no circular references.
+
+```javascript
+let room = {
+    number: 23
+  };
+  
+  let meetup = {
+    title: "Conference",
+    participants: ["john", "ann"]
+  };
+  
+  meetup.place = room;       // meetup references room
+  room.occupiedBy = meetup; // room references meetup
+  
+  JSON.stringify(meetup);   
+```
+
+The Above code will generate an error due to cricular reference.
+
+to eliminate it we should use replacer function or array for encode then the error will be removed the above code returned as
+
+```javascript
+let room = {
+    number: 23
+  };
+  
+  let meetup = {
+    title: "Conference",
+    participants: ["john", "ann"]
+  };
+  meetup.place = room;       // meetup references room
+  room.occupiedBy = meetup;// room references meetup
+  
+ console.log( JSON.stringify(meetup, function replacer(key, value) {
+    return (key == 'occupiedBy') ? undefined : value;
+  }));
+   console.log( JSON.stringify(room, function replacer(key, value) {
+        return (key == 'place')?undefined : value;
+  }));
+//to print the objects just remove the opposite attribute and set it to undefined
+/*
+output:
+{"title":"Conference","participants":["john","ann"],"place":{"number":23}}
+{"number":23,"occupiedBy":{"title":"Conference","participants":["john","ann"]}}
+*/
+```
+
+Note:
+
+dont use circular references it is a bad approach(leads to memory leakage)
+
+Using replacer and spaces:
+
+```javascript
+
+
+let room = {
+  number: 23
+};
+
+let meetup = {
+  title: "Conference",
+  participants: [{name: "John"}, {name: "Alice"}],
+  place: room // meetup references room
+};
+
+room.occupiedBy = meetup; // room references meetup
+
+console.log( JSON.stringify(meetup, ['title', 'participants']) );
+// {"title":"Conference","participants":[{},{}]}
+
+
+let room = {
+  number: 23
+};
+
+let meetup = {
+  title: "Conference",
+  participants: [{name: "John"}, {name: "Alice"}],
+  place: room // meetup references room
+};
+
+room.occupiedBy = meetup; // room references meetup
+
+console.log( JSON.stringify(meetup, ['title', 'participants', 'place', 'name', 'number']) );
+/*
+{
+  "title":"Conference",
+  "participants":[{"name":"John"},{"name":"Alice"}],
+  "place":{"number":23}
+}*/
+
+
+
+let room = {
+  number: 23
+};
+
+let meetup = {
+  title: "Conference",
+  participants: [{name: "John"}, {name: "Alice"}],
+  place: room // meetup references room
+};
+
+room.occupiedBy = meetup; // room references meetup
+
+console.log( JSON.stringify(meetup, function replacer(key, value) {
+  console.log(`${key}: ${value}`);
+  return (key == 'occupiedBy') ? undefined : value;
+}));
+
+/* key:value pairs that come to replacer:
+:             [object Object]
+title:        Conference
+participants: [object Object],[object Object]
+0:            [object Object]
+name:         John
+1:            [object Object]
+name:         Alice
+place:        [object Object]
+number:       23
+occupiedBy: [object Object]
+*/
+
+
+
+let user = {
+  name: "John",
+  age: 25,
+  roles: {
+    isAdmin: false,
+    isEditor: true
+  }
+};
+
+alert(JSON.stringify(user, null, 2));
+/* two-space indents:
+{
+  "name": "John",
+  "age": 25,
+  "roles": {
+    "isAdmin": false,
+    "isEditor": true
+  }
+}
+*/
+
+/* for JSON.stringify(user, null, 4) the result would be more indented:
+{
+    "name": "John",
+    "age": 25,
+    "roles": {
+        "isAdmin": false,
+        "isEditor": true
+    }
+}
+*/
+
+```
+
+# ReadLine-sync
+
+to Read user input we use ReadLine-sync method for synchronous reading of input.
+
+```javascript
+var rl=require('readline-sync');
+var name=rl.question('enter name\n')
+console.log(name)
 ```

@@ -186,7 +186,8 @@ if (!a) {
 The problem is that you’ve created an object wrapper around the false value, but objects themselves are “truthy"S, so
 using the object behaves oppositely to using the underlying false value itself, which is quite contrary to normal expectation. If you want to manually box a primitive value, you can use the Object(..) function (no new keyword):
 
-```var
+```javascript
+var a="abc"
 var b = new String( a );
 var c = Object( a );
 typeof a; // "string"
@@ -196,7 +197,6 @@ b instanceof String; // true
 c instanceof String; // true
 Object.prototype.toString.call( b ); // "[object String]"
 Object.prototype.toString.call( c ); // "[object String]"
-
 ```
 
 Again, using the boxed object wrapper directly (like b and c above)  is usually discouraged, but there may be some rare occasions you’ll
@@ -204,12 +204,44 @@ run into where they may be useful
 
 If you have an object wrapper and you want to get the underlying primitive value out, you can use the valueOf() method:
 
-```var
+```javascript
+var a=new String("abc");
 var b = new Number( 42 );
 var c = new Boolean( true );
 a.valueOf(); // "abc"
 b.valueOf(); // 42
 c.valueOf(); // true
+
 ```
 
-x
+Unboxing can also happen implicitly, when using an object wrapper value in a way that requires the primitive value. This process (coercion) will be covered in more detail next, but briefly:
+
+```javascript
+var a = new String( "abc" );
+var b = a + ""; // `b` has the unboxed primitive value "abc"
+typeof a; // "object"
+typeof b; // "string"
+```
+
+The Array constructor has a special form where if only one number argument is passed, instead of providing that value as contents of the
+array, it’s taken as a length to “presize the array” (well, sorta). This is a terrible idea. Firstly, you can trip over that form accidentally, as it’s easy to forget.
+
+```javascript
+var a=new Array(3);
+console.log(a.length);
+console.log(a);
+var b=[3]
+console.log(b.length);
+var c=new Array(3,2);
+console.log(c.length);
+/*
+3
+[ <3 empty items> ]
+1
+2
+*/
+```
+
+when we try to push the values in a the empty items remains same and then value will be pushed. so it is bad practice to declare array object with 
+
+one argument with constructor. we can declare array object using square objects and it is good to practise it.

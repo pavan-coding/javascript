@@ -8,6 +8,10 @@
 
 [Natives](#natives)
 
+[Operator Precedence](#operator-precedence)
+
+[Errors and Exceptional handling](#errors-and-exceptional-handling)
+
 ---
 
 # Array Methods
@@ -242,6 +246,257 @@ console.log(c.length);
 */
 ```
 
-when we try to push the values in a the empty items remains same and then value will be pushed. so it is bad practice to declare array object with 
+when we try to push the values in a the empty items remains same and then value will be pushed. so it is bad practice to declare array object with
 
 one argument with constructor. we can declare array object using square objects and it is good to practise it.
+
+**Implict Coercion**:
+
+which is done by the java scipt engine
+
+**Explict Coercion**:
+
+which is done by us.
+
+```javascript
+var a = 42;
+var b = a + ""; // implicit coercion
+var c = String( a ); //explicit coercion
+```
+
+# Operator Precedence
+
+Note: more in number more in precedence.
+
+| Val | Operator | Description                                                                                                                                    | Example                 |
+| --- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| 18  | ( )      | [Expression Grouping](https://www.w3schools.com/js/tryit.asp?filename=tryjs_arithmetic_precedence2)                                               | (100 + 50) * 3          |
+| 17  | .        | [Member Of](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_member_of)                                                                 | person.name             |
+| 17  | []       | [Member Of](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_member_of2)                                                                | person["name"]          |
+| 17  | ?.       | [Optional Chaining](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_optional_chaining) [ES2020](https://www.w3schools.com/js/js_2019.asp) | x ?. y                  |
+| 17  | ()       | [Function Call](https://www.w3schools.com/js/tryit.asp?filename=tryjs_functions)                                                                  | myFunction()            |
+| 17  | new      | [New with Arguments](https://www.w3schools.com/js/tryit.asp?filename=tryjs_date_new_arguments)                                                    | new Date("June 5,2022") |
+| 16  | new      | [New without Arguments](https://www.w3schools.com/js/tryit.asp?filename=tryjs_date_current)                                                       | new Date()              |
+
+| 15 | ++ | [Postfix Increment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_incr2) | i++ |
+| -- | -- | ---------------------------------------------------------------------------------- | --- |
+| 15 | -- | [Postfix Decrement](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_decr2) | i-- |
+| 14 | ++ | [Prefix Increment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_incr)   | ++i |
+| 14 | -- | [Prefix Decrement](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_decr)   | --i |
+
+| 14 | ! | [Logical NOT](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_not)    | !(x==y) |
+| -- | - | ----------------------------------------------------------------------------- | ------- |
+| 14 | ~ | [Bitwise NOT](https://www.w3schools.com/js/tryit.asp?filename=tryjs_bitwise_not) | ~x      |
+
+| 14 | +      | [Unary Plus](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_unary_plus)   | +x                 |
+| -- | ------ | ---------------------------------------------------------------------------------- | ------------------ |
+| 14 | -      | [Unary Minus](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_unary_minus) | -x                 |
+| 14 | typeof | [Data Type](https://www.w3schools.com/js/tryit.asp?filename=tryjs_typeof_all)         | typeof x           |
+| 14 | void   | [Evaluate Void](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_void)      | void(0)            |
+| 14 | delete | [Property Delete](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_delete)  | delete myCar.color |
+
+| 13 | ** | [Exponentiation](https://www.w3schools.com/js/tryit.asp?filename=tryjs_arithmetric_exponent1) [ES2016](https://www.w3schools.com/js/js_2016.asp) | 10 ** 2        |
+| -- | -- | ------------------------------------------------------------------------------------------------------------------------------------------ | -------------- |
+| 12 | *  | [Multiplication](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_mult)                                                             | 10 * 5         |
+| 12 | /  | [Division](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_div)                                                                    | 10 / 5         |
+| 12 | %  | [Division Remainder](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_mod)                                                          | 10 % 5         |
+| 11 | +  | [Addition](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_add)                                                                    | 10 + 5         |
+| 11 | -  | [Subtraction](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_sub)                                                                 | 10 - 5         |
+| 11 | +  | [Concatenation](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_concatenate)                                                       | "John" + "Doe" |
+
+| 10 | <<  | [Shift Left](https://www.w3schools.com/js/tryit.asp?filename=tryjs_bitwise_left)                 | x << 2  |
+| -- | --- | --------------------------------------------------------------------------------------------- | ------- |
+| 10 | >>  | [Shift Right (signed)](https://www.w3schools.com/js/tryit.asp?filename=tryjs_bitwise_right_sign) | x >> 2  |
+| 10 | >>> | [Shift Right (unsigned)](https://www.w3schools.com/js/tryit.asp?filename=tryjs_bitwise_right)    | x >>> 2 |
+
+| 9 | in         | [Property in Object](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_in)         | "PI" in Math       |
+| - | ---------- | ---------------------------------------------------------------------------------------- | ------------------ |
+| 9 | instanceof | [Instance of Object](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_instanceof) | x instanceof Array |
+
+| 9 | <   | [Less than](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison9)              | x < y      |
+| - | --- | ---------------------------------------------------------------------------------------- | ---------- |
+| 9 | <=  | [Less than or equal](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison11)    | x <= y     |
+| 9 | >   | [Greater than](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison8)           | x > y      |
+| 9 | >=  | [Greater than or equal](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison10) | x >= Array |
+| 8 | ==  | [Equal](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison1)                  | x == y     |
+| 8 | === | [Strict equal](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison4)           | x === y    |
+| 8 | !=  | [Unequal](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison5)                | x != y     |
+| 8 | !== | [Strict unequal](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison6)         | x !== y    |
+
+| 7 | & | [Bitwise AND](https://www.w3schools.com/js/tryit.asp?filename=tryjs_bitwise_and) | x & y |
+| - | - | ----------------------------------------------------------------------------- | ----- |
+| 6 | ^ | [Bitwise XOR](https://www.w3schools.com/js/tryit.asp?filename=tryjs_bitwise_xor) | x ^ y |
+| 5 | l | [Bitwise OR](https://www.w3schools.com/js/tryit.asp?filename=tryjs_bitwise_or)   | x l y |
+
+| 4 | && | [Logical AND](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison_and)                                                 | x && y |
+| - | -- | -------------------------------------------------------------------------------------------------------------------------------- | :----: |
+| 3 | ll | [Logical OR](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison_or)                                                   | x ll y |
+| 3 | ?? | [Nullish Coalescing](https://www.w3schools.com/js/tryit.asp?filename=tryjs_nullish) [ES2020](https://www.w3schools.com/js/js_2019.asp) | x ?? y |
+
+| 2 | ? : | [Condition](https://www.w3schools.com/js/tryit.asp?filename=tryjs_comparison) | ? "yes" : "no" |
+| - | --- | -------------------------------------------------------------------------- | -------------- |
+
+| 2 | =      | [Simple Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_equal)                   | x = y    |
+| - | ------ | ------------------------------------------------------------------------------------------------------ | -------- |
+| 2 | :      | [Colon Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_colon)                    | x: 5     |
+| 2 | +=     | [Addition Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_plusequal)             | x += y   |
+| 2 | -=     | [Subtraction Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_minequal)           | x -= y   |
+| 2 | *=     | [Multiplication Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_multequal)       | x *= y   |
+| 2 | **=    | [Exponentiation Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_exponential)     | x **= y  |
+| 2 | /=     | [Division Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_divequal)              | x /= y   |
+| 2 | %=     | [Remainder Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_modequal)             | x %= y   |
+| 2 | <<=    | [Left Shift Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_left_shift)          | x <<= y  |
+| 2 | >>=    | [Right Shift Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_right_shift)        | x >>= y  |
+| 2 | >>>=   | [Unsigned Right Shift](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_unsigned_right_shift) | x >>>= y |
+| 2 | &=     | [Bitwise AND Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_bitwise_and)        | x &= y   |
+| 2 | l=     | [Bitwise OR Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_bitwise_or)          | x l= y   |
+| 2 | ^=     | [Bitwise XOR Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_bitwise_xor)        | x ^= y   |
+| 2 | &&=    | [Logical AND Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_logical_and)        | x &= y   |
+| 2 | ll=    | [Logical OR Assignment](https://www.w3schools.com/js/tryit.asp?filename=tryjs_assign_logical_or)          | x ll= y  |
+| 2 | =>     | [Arrow](https://www.w3schools.com/js/tryit.asp?filename=tryjs_arrow_function4)                            | x => y   |
+| 2 | yield  | Pause / Resume                                                                                         | yield x  |
+| 2 | yield* | Delegate                                                                                               | yield* x |
+| 2 | ...    | [Spread](https://www.w3schools.com/js/tryit.asp?filename=tryjs_oper_spread_array)                         | ... x    |
+| 1 | ,      | Comma                                                                                                  | x , y    |
+
+# Errors and Exceptional Handling
+
+* there are 4 keyword for errors exceptional handling.
+  * try
+  * catch
+  * finally
+  * throw
+
+**Try Catch**:
+
+**syntax**:
+
+```javascript
+try {
+  Block of code to try
+}
+catch(err) {
+  Block of code to handle errors
+}
+```
+
+Note:
+
+the errors that occurs at read time are called as *parse time error(syntax are incorrect)*
+
+try catch can handle the error that occurs in valid code.
+
+try catch execute in synchronous manner.
+
+Error object has 4 properties there are
+
+* Name
+* Message
+* Stack
+
+`name `Error name. For instance, for an undefined variable that's `"ReferenceError"`.
+
+`message `Textual message about error details.There are other non-standard properties available in most environments. One of most widely used and supported is:
+
+`stack` Current call stack: a string with information about the sequence of nested calls that led to the error. Used for debugging purposes.
+
+## The throw Statement
+
+The `throw` statement allows you to create a custom error.
+
+Technically you can  **throw an exception (throw an error)** .
+
+The exception can be a JavaScript `String`, a `Number`, a `Boolean` or an `Object`:
+
+example:
+
+```javascript
+throw "Too big";    // throw a text
+throw 500;          // throw a number
+```
+
+
+The syntax is:
+
+throw `<error object> or <message>`
+
+Technically, we can use anything as an error object. That may be even a primitive, like a number or a string, but it’s better to use objects, preferably with `name` and `message` properties (to stay somewhat compatible with built-in errors).
+
+JavaScript has many built-in constructors for standard errors: `Error`, `SyntaxError`, `ReferenceError`, `TypeError` and others. We can use them to create error objects as well.
+
+Their syntax is:
+
+```javascript
+let error = new Error(message);
+// or
+let error = new SyntaxError(message);
+let error = new ReferenceError(message);
+// ...
+```
+
+For built-in errors (not for any objects, just for errors), the `name` property is exactly the name of the constructor. And `message` is taken from the argument.
+
+**Finally**:
+
+The `try...catch` construct may have one more code clause: `finally`.
+
+If it exists, it runs in all cases:
+
+* after `try`, if there were no errors,
+* after `catch`, if there were errors.
+
+The extended syntax looks like this:
+
+```javascript
+try {
+   ... try to execute the code ...
+} catch (err) {
+   ... handle errors ...
+} finally {
+   ... execute always ...
+}
+```
+
+The code has two ways of execution:
+
+1. If you answer “Yes” to “Make an error?”, then `try -> catch -> finally`.
+2. If you say “No”, then `try -> finally`.
+
+The `finally` clause is often used when we start doing something and want to finalize it in any case of outcome.
+
+For instance, we want to measure the time that a Fibonacci numbers function `fib(n)` takes. Naturally, we can start measuring before it runs and finish afterwards. But what if there’s an error during the function call? In particular, the implementation of `fib(n)` in the code below returns an error for negative or non-integer numbers.
+
+The `finally` clause is a great place to finish the measurements no matter what.
+
+Here `finally` guarantees that the time will be measured correctly in both situations – in case of a successful execution of `fib` and in case of an error in it:
+
+Note:
+
+The `finally` clause works for *any* exit from `try...catch`. That includes an explicit `return`.
+
+In the example below, there’s a `return` in `try`. In this case, `finally` is executed just before the control returns to the outer code.
+
+example:
+
+```javascript
+function func() {
+
+    try {
+      return 1;
+  
+    } catch (err) {
+      /* ... */
+    } finally {
+      console.log( 'finally' );
+    }
+  }
+  func()
+```
+
+the code above give output finally.
+
+Note: 
+
+we can remove catch by keeping finally If we don't want to handle the error.
+
+**Custom Error and Extending Errors**

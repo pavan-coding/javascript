@@ -415,7 +415,6 @@ throw "Too big";    // throw a text
 throw 500;          // throw a number
 ```
 
-
 The syntax is:
 
 throw `<error object> or <message>`
@@ -495,8 +494,76 @@ function func() {
 
 the code above give output finally.
 
-Note: 
+Note:
 
 we can remove catch by keeping finally If we don't want to handle the error.
 
 **Custom Error and Extending Errors**
+
+When we develop something, we often need our own error classes to reflect specific things that may go wrong in our tasks. For errors in network operations we may need `HttpError`, for database operations `DbError`, for searching operations `NotFoundError` and so on.
+
+Our errors should support basic error properties like `message`, `name` and, preferably, `stack`. But they also may have other properties of their own, e.g. `HttpError` objects may have a `statusCode` property with a value like `404` or `403` or `500`.
+
+JavaScript allows to use `throw` with any argument, so technically our custom error classes don’t need to inherit from `Error`. But if we inherit, then it becomes possible to use `obj instanceof Error` to identify error objects. So it’s better to inherit from it.
+
+As the application grows, our own errors naturally form a hierarchy. For instance, `HttpTimeoutError` may inherit from `HttpError`, and so on.
+
+```javascript
+class ValidationError extends Error {
+  constructor(message) {
+    super(message); // (1)
+    this.name = "ValidationError"; // (2)
+  }
+}
+
+function test() {
+  throw new ValidationError("Whoops!");
+}
+
+try {
+  test();
+} catch(err) {
+  alert(err.message); // Whoops!
+  alert(err.name); // ValidationError
+  alert(err.stack); // a list of nested calls with line numbers for each
+}
+```
+
+when we have more than one error then we can use instanceof to find the for which the error belong to.
+
+```javascript
+class ValidationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ValidationError";
+  }
+}
+
+// Usage
+function readUser(json) {
+  let user = JSON.parse(json);
+
+  if (!user.age) {
+    throw new ValidationError("No field: age");
+  }
+  if (!user.name) {
+    throw new ValidationError("No field: name");
+  }
+
+  return user;
+}
+
+// Working example with try..catch
+
+try {
+  let user = readUser('{ "age": 25 }');
+} catch (err) {
+  if (err instanceof ValidationError) {
+    alert("Invalid data: " + err.message); // Invalid data: No field: name
+  } else if (err instanceof SyntaxError) { // (*)
+    alert("JSON Syntax Error: " + err.message);
+  } else {
+    throw err; // unknown error, rethrow it (**)
+  }
+}
+```

@@ -1,4 +1,4 @@
-this.onerror=function(message,url,line,column,error){
-    console.log("error occured")
-}
+process.on('uncaughtException',function(e) {
+    console.log("errror has occured")
+})
 throw "demo"

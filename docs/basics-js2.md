@@ -567,3 +567,51 @@ try {
   }
 }
 ```
+
+**Global Exceptional Handling**:
+
+> In js we have window object where as in node js we have global object
+
+
+## Global Objects
+
+The following table provides a list of other objects which we use frequently in our applications. For a more detail, you can refer to the official documentation.
+
+| Sr.No. | Module Name & Description                                                                                                                                                      |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1      | [**Console**](https://www.tutorialspoint.com/nodejs/nodejs_console.htm):Used to print information on stdout and stderr.                                                     |
+| 2      | [**Process**](https://www.tutorialspoint.com/nodejs/nodejs_process.htm):Used to get information on current process. Provides multiple events related to process activities. |
+
+## Console Methods
+
+Following is a list of methods available with the console global object.
+
+| Sr.No. | Method & Description                                                                                                                  |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| 1      | console.log([data][, ...])  Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.         |
+| 2      | console.info([data][, ...])  Prints to stdout with newline. This function can take multiple arguments in a printf()-like way.        |
+| 3      | console.error([data][, ...])  Prints to stderr with newline. This function can take multiple arguments in a printf()-like way.       |
+| 4      | console.warn([data][, ...])  Prints to stderr with newline. This function can take multiple arguments in a printf()-like way         |
+| 5      | console.dir(obj[, options])  Uses util.inspect on obj and prints resulting string to stdout.                                         |
+| 6      | console.time(label)  Mark a time.                                                                                                    |
+| 7      | console.timeEnd(label)  Finish timer, record output.                                                                                 |
+| 8      | console.trace(message[, ...])  Print to stderr 'Trace :', followed by the formatted message and stack trace to the current position. |
+| 9      | console.assert(value[, message][, ...])  Similar to assert.ok(), but the error message is formatted as util.format(message...).      |
+
+Process Events
+
+The process object is an instance of EventEmitter and emits the following events −
+
+| Sr.No. | Event & Description                                                                                                                                                                                                                                                  |
+| ------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1      | **exit**:Emitted when the process is about to exit. There is no way to prevent the exiting of the event loop at this point, and once all exit listeners have finished running, the process will exit.                                                          |
+| 2      | **beforeExit**:This event is emitted when node empties its event loop and has nothing else to schedule. Normally, the node exits when there is no work scheduled, but a listener for 'beforeExit' can make asynchronous calls, and cause the node to continue. |
+| 3      | **uncaughtException**:Emitted when an exception bubbles all the way back to the event loop. If a listener is added for this exception, the default action (which is to print a stack trace and exit) will not occur.:                                          |
+| 4      | **Signal Events**:Emitted when the processes receives a signal such as SIGINT, SIGHUP, etc.                                                                                                                                                                    |
+
+```javascript
+process.on('uncaughtException',function(e) {
+    console.log("errror has occured")
+})
+throw "demo"
+```

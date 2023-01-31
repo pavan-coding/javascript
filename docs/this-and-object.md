@@ -1,9 +1,6 @@
 # Concepts:
 
 * [Objects](#objects)
-* call,apply,bind
-* classes
-* prototype
 
 # Objects:
 
@@ -1499,3 +1496,270 @@ The JavaScript Symbol is a function that is used to identify the object properti
 ## Syntax
 
 1. Symbol([description])
+
+
+# Symbol type
+
+By specification, only two primitive types may serve as object property keys:
+
+* string type, or
+* symbol type.
+
+Otherwise, if one uses another type, such as number, it’s autoconverted to string. So that `obj[1]` is the same as `obj["1"]`, and `obj[true]` is the same as `obj["true"]`.
+
+Until now we’ve been using only strings.
+
+Now let’s explore symbols, see what they can do for us.
+
+## Symbols
+
+A “symbol” represents a unique identifier.
+
+A value of this type can be created using `Symbol()`:
+
+```javascript
+let id = Symbol();
+```
+
+Upon creation, we can give symbols a description (also called a symbol name), mostly useful for debugging purposes:
+
+```javascript
+// id is a symbol with the description "id"
+let id = Symbol("id");
+```
+
+Symbols are guaranteed to be unique. Even if we create many symbols with exactly the same description, they are different values. The description is just a label that doesn’t affect anything.
+
+For instance, here are two symbols with the same description – they are not equal:
+
+```javascript
+let id1 = Symbol("id");
+let id2 = Symbol("id");
+
+console.log(id1 == id2); // false
+```
+
+If you are familiar with Ruby or another language that also has some sort of “symbols” – please don’t be misguided. JavaScript symbols are different.
+
+So, to summarize, a symbol is a “primitive unique value” with an optional description. Let’s see where we can use them.
+
+**Symbols don’t auto-convert to a string**
+
+Most values in JavaScript support implicit conversion to a string. For instance, we can `alert` almost any value, and it will work. Symbols are special. They don’t auto-convert.
+
+For instance, this `alert` will show an error:
+
+```javascript
+let id = Symbol("id");
+console.log(id+""); // TypeError: Cannot convert a Symbol value to a string
+```
+
+That’s a “language guard” against messing up, because strings and symbols are fundamentally different and should not accidentally convert one into another.
+
+If we really want to show a symbol, we need to explicitly call `.toString()` on it, like here:
+
+```javascript
+let id = Symbol("id");
+console.log(id.toString()+""); // Symbol(id), now it works
+```
+
+Or get `symbol.description` property to show the description only:
+
+```javascript
+let id = Symbol("id");
+console.log(id.description); // id
+```
+
+## “Hidden” properties
+
+Symbols allow us to create “hidden” properties of an object, that no other part of code can accidentally access or overwrite.
+
+For instance, if we’re working with `user` objects, that belong to a third-party code. We’d like to add identifiers to them.
+
+Let’s use a symbol key for it:
+
+```javascript
+let user = { // belongs to another code
+  name: "John"
+};
+
+let id = Symbol("id");
+
+user[id] = 1;
+
+console.log( user[id] ); 
+```
+
+What’s the benefit of using `Symbol("id")` over a string `"id"`?
+
+As `user` objects belong to another codebase, it’s unsafe to add fields to them, since we might affect pre-defined behavior in that other codebase. However, symbols cannot be accessed accidentally. The third-party code won’t be aware of newly defined symbols, so it’s safe to add symbols to the `user` objects.
+
+Also, imagine that another script wants to have its own identifier inside `user`, for its own purposes.
+
+Then that script can create its own `Symbol("id")`
+
+There will be no conflict between our and their identifiers, because symbols are always different, even if they have the same name.
+
+…But if we used a string `"id"` instead of a symbol for the same purpose, then there *would* be a conflict:
+
+```javascript
+let user = { name: "John" };
+
+// Our script uses "id" property
+user.id = "Our id value";
+
+// ...Another script also wants "id" for its purposes...
+
+user.id = "Their id value"
+// Boom! overwritten by another script!
+```
+
+Symbol are skipped in for in loop
+
+```javascript
+let id = Symbol("id");
+let user = {
+  name: "John",
+  age: 30,
+  [id]: 123
+};
+
+for (let key in user) alert(key); // name, age (no symbols)
+```
+
+[Object.keys(user)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys) also ignores them. That’s a part of the general “hiding symbolic properties” principle. If another script or a library loops over our object, it won’t unexpectedly access a symbolic property.
+
+In contrast, [Object.assign](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign) copies both string and symbol properties:
+
+There’s no paradox here. That’s by design. The idea is that when we clone an object or merge objects, we usually want *all* properties to be copied (including symbols like `id`).
+
+## Global symbols
+
+As we’ve seen, usually all symbols are different, even if they have the same name. But sometimes we want same-named symbols to be same entities. For instance, different parts of our application want to access symbol `"id"` meaning exactly the same property.
+
+To achieve that, there exists a  *global symbol registry* . We can create symbols in it and access them later, and it guarantees that repeated accesses by the same name return exactly the same symbol.
+
+In order to read (create if absent) a symbol from the registry, use `Symbol.for(key)`.
+
+That call checks the global registry, and if there’s a symbol described as `key`, then returns it, otherwise creates a new symbol `Symbol(key)` and stores it in the registry by the given `key`.
+
+For instance:
+
+```javascript
+// read from the global registry
+let id = Symbol.for("id"); // if the symbol did not exist, it is created
+
+// read it again (maybe from another part of the code)
+let idAgain = Symbol.for("id");
+
+// the same symbol
+console.log( id === idAgain ); // true
+```
+
+Symbols inside the registry are called  *global symbols* . If we want an application-wide symbol, accessible everywhere in the code – that’s what they are for.
+
+### Symbol.keyFor
+
+We have seen that for global symbols, `Symbol.for(key)` returns a symbol by name. To do the opposite – return a name by global symbol – we can use: `Symbol.keyFor(sym)`:
+
+For instance:
+
+```javascript
+// get symbol by name
+let sym = Symbol.for("name");
+let sym2 = Symbol.for("id");
+
+// get name by symbol
+console.log( Symbol.keyFor(sym) ); // name
+console.log( Symbol.keyFor(sym2) ); // id
+```
+
+The `Symbol.keyFor` internally uses the global symbol registry to look up the key for the symbol. So it doesn’t work for non-global symbols. If the symbol is not global, it won’t be able to find it and returns `undefined`.
+
+That said, all symbols have the `description` property.
+
+For instance:
+
+```javascript
+let globalSymbol = Symbol.for("name");
+let localSymbol = Symbol("name");
+
+console.log( Symbol.keyFor(globalSymbol) ); // name, global symbol
+console.log( Symbol.keyFor(localSymbol) ); // undefined, not global
+
+console.log( localSymbol.description ); // name
+```
+
+# Object.keys, values, entries
+
+For plain objects, the following methods are available:
+
+* [Object.keys(obj)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys) – returns an array of keys.
+* [Object.values(obj)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/values) – returns an array of values.
+* [Object.entries(obj)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries) – returns an array of `[key, value]` pairs.
+
+
+The first difference is that we have to call `Object.keys(obj)`, and not `obj.keys()`.
+
+Why so? The main reason is flexibility. Remember, objects are a base of all complex structures in JavaScript. So we may have an object of our own like `data` that implements its own `data.values()` method. And we still can call `Object.values(data)` on it.
+
+The second difference is that `Object.*` methods return “real” array objects, not just an iterable. That’s mainly for historical reasons.
+
+For instance:
+
+```javascript
+let user = {
+  name: "John",
+  age: 30
+};
+```
+
+* `Object.keys(user) = ["name", "age"]`
+* `Object.values(user) = ["John", 30]`
+* `Object.entries(user) = [ ["name","John"], ["age",30] ]`
+
+```javascript
+let user = {
+  name: "John",
+  age: 30
+};
+
+// loop over values
+for (let value of Object.values(user)) {
+  console.log(value); // John, then 30
+}
+```
+
+**Object.keys/values/entries ignore symbolic properties**
+
+Just like a `for..in` loop, these methods ignore properties that use `Symbol(...)` as keys.
+
+## Transforming objects
+
+Objects lack many methods that exist for arrays, e.g. `map`, `filter` and others.
+
+If we’d like to apply them, then we can use `Object.entries` followed by `Object.fromEntries`:
+
+1. Use `Object.entries(obj)` to get an array of key/value pairs from `obj`.
+2. Use array methods on that array, e.g. `map`, to transform these key/value pairs.
+3. Use `Object.fromEntries(array)` on the resulting array to turn it back into an object.
+
+For example, we have an object with prices, and would like to double them:
+
+```javascript
+let prices = {
+  banana: 1,
+  orange: 2,
+  meat: 4,
+};
+
+let doublePrices = Object.fromEntries(
+  // convert prices to array, map each key/value pair into another pair
+  // and then fromEntries gives back the object
+  Object.entries(prices).map(entry => [entry[0], entry[1] * 2])
+);
+
+console.log(doublePrices.meat); // 8
+```
+
+It may look difficult at first sight, but becomes easy to understand after you use it once or twice. We can make powerful chains of transforms this way.

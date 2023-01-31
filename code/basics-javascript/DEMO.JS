@@ -1,4 +1,13 @@
-let demo={val:true}
-let demo2=demo;
-demo2=null;
-console.log(demo2,demo);
+
+(function () {
+  let x = "Hello!!";  // I will invoke myself
+})();
+//or
+(()=> {
+    let x = "Hello!!";  // I will invoke myself
+  })();
+//or
+var a; 
+(a=function () {
+    console.log("hello")// I will invoke myself
+  })();

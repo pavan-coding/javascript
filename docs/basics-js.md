@@ -995,6 +995,7 @@ You cannot self-invoke a function declaration.
 You have to add parentheses around the function to indicate that it is a function expression:
 
 ```javascript
+
 (function () {
   let x = "Hello!!";  // I will invoke myself
 })();
@@ -1002,9 +1003,10 @@ You have to add parentheses around the function to indicate that it is a functio
 (()=> {
     let x = "Hello!!";  // I will invoke myself
   })();
-//or 
-( var a=function () {
-    let x = "Hello!!";  // I will invoke myself
+//or
+var a; 
+(a=function () {
+    console.log("hello")// I will invoke myself
   })();
 ```
 

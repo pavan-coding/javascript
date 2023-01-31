@@ -105,7 +105,7 @@ let user = {};
 user["likes birds"] = true;
 
 // get
-alert(user["likes birds"]); // true
+console.log(user["likes birds"]); // true
 
 // delete
 delete user["likes birds"];
@@ -135,7 +135,7 @@ let user = {
 let key = prompt("What do you want to know about the user?", "name");
 
 // access by variable
-alert( user[key] ); // John (if enter "name")
+console.log( user[key] ); // John (if enter "name")
 ```
 
 ```javascript
@@ -145,7 +145,7 @@ let user = {
 };
 
 let key = "name";
-alert( user.key ) // undefined
+console.log( user.key ) // undefined
 ```
 
 Computed properties
@@ -161,7 +161,7 @@ let bag = {
   [fruit]: 5, // the name of the property is taken from the variable fruit
 };
 
-alert( bag.apple ); // 5 if fruit="apple"
+console.log( bag.apple ); // 5 if fruit="apple"
 ```
 
 The meaning of a computed property is simple: `[fruit]` means that the property name should be taken from `fruit`.
@@ -209,7 +209,7 @@ function makeUser(name, age) {
 }
 
 let user = makeUser("John", 30);
-alert(user.name); // John
+console.log(user.name); // John
 ```
 
 In the example above, properties have the same names as variables. The use-case of making a property from a variable is so common, that there’s a special *property value shorthand* to make it shorter.
@@ -240,7 +240,7 @@ let obj = {
   return: 3
 };
 
-alert( obj.for + obj.let + obj.return );  // 6
+console.log( obj.for + obj.let + obj.return );  // 6
 ```
 
 In short, there are no limitations on property names. They can be any strings or symbols (a special type for identifiers, to be covered later).
@@ -255,8 +255,8 @@ let obj = {
 };
 
 // both alerts access the same property (the number 0 is converted to string "0")
-alert( obj["0"] ); // test
-alert( obj[0] ); // test (same property)
+console.log( obj["0"] ); // test
+console.log( obj[0] ); // test (same property)
 ```
 
 There’s a minor gotcha with a special property named `__proto__`. We can’t set it to a non-object value:
@@ -264,7 +264,7 @@ There’s a minor gotcha with a special property named `__proto__`. We can’t s
 ```javascript
 let obj = {};
 obj.__proto__ = 5; // assign a number
-alert(obj.__proto__); // [object Object] - the value is an object, didn't work as intended
+console.log(obj.__proto__); // [object Object] - the value is an object, didn't work as intended
 ```
 
 As we see from the code, the assignment to a primitive `5` is ignored.(the concept told in prototypes)
@@ -278,7 +278,7 @@ Reading a non-existing property just returns `undefined`. So we can easily test 
 ```javascript
 let user = {};
 
-alert( user.noSuchProperty === undefined ); // true means "no such property"
+console.log( user.noSuchProperty === undefined ); // true means "no such property"
 ```
 
 There’s also a special operator `"in"` for that.
@@ -288,8 +288,8 @@ The syntax is:
 ```javascript
 let user = { name: "John", age: 30 };
 
-alert( "age" in user ); // true, user.age exists
-alert( "blabla" in user ); // false, user.blabla doesn't exist
+console.log( "age" in user ); // true, user.age exists
+console.log( "blabla" in user ); // false, user.blabla doesn't exist
 ```
 
 Please note that on the left side of `in` there must be a  *property name* . That’s usually a quoted string.
@@ -300,7 +300,7 @@ If we omit quotes, that means a variable should contain the actual name to be te
 let user = { age: 30 };
 
 let key = "age";
-alert( key in user ); // true, property "age" exists
+console.log( key in user ); // true, property "age" exists
 ```
 
 Why does the `in` operator exist? Isn’t it enough to compare against `undefined`?
@@ -346,9 +346,9 @@ let user = {
 
 for (let key in user) {
   // keys
-  alert( key );  // name, age, isAdmin
+  console.log( key );  // name, age, isAdmin
   // values for the keys
-  alert( user[key] ); // John, 30, true
+  console.log( user[key] ); // John, 30, true
 }
 ```
 
@@ -374,7 +374,7 @@ let codes = {
 };
 
 for (let code in codes) {
-  alert(code); // 1, 41, 44, 49
+  console.log(code); // 1, 41, 44, 49
 }
 ```
 
@@ -427,7 +427,7 @@ let codes = {
 };
 
 for (let code in codes) {
-  alert( +code ); // 49, 41, 44, 1
+  console.log( +code ); // 49, 41, 44, 1
 }
 ```
 
@@ -533,7 +533,7 @@ const user = {
 
 user.name = "Pete"; // (*)
 
-alert(user.name); // Pete
+console.log(user.name); // Pete
 ```
 
 It might seem that the line `(*)` would cause an error, but it does not. The value of `user` is constant, it must always reference the same object, but properties of that object are free to change.
@@ -622,7 +622,6 @@ let clone = Object.assign({}, user);
 console.log(clone.name); // John
 console.log(clone.age); // 30
 ```
-
 
 Here it copies all properties of `user` into the empty object and returns it.
 
@@ -720,7 +719,6 @@ structuredClone({
   f: function() {}
 });
 ```
-
 
 Function properties aren’t supported.
 
@@ -864,3 +862,640 @@ This example demonstrates how important the concept of reachability is.
 It’s obvious that John and Ann are still linked, both have incoming references. But that’s not enough.
 
 The former `"family"` object has been unlinked from the root, there’s no reference to it any more, so the whole island becomes unreachable and will be removed.
+
+## Internal algorithms
+
+The basic garbage collection algorithm is called “mark-and-sweep”.
+
+The following “garbage collection” steps are regularly performed:
+
+* The garbage collector takes roots and “marks” (remembers) them.
+* Then it visits and “marks” all references from them.
+* Then it visits marked objects and marks *their* references. All visited objects are remembered, so as not to visit the same object twice in the future.
+* …And so on until every reachable (from the roots) references are visited.
+* All objects except marked ones are removed.
+
+We can also imagine the process as spilling a huge bucket of paint from the roots, that flows through all references and marks all reachable objects. The unmarked ones are then removed.
+
+That’s the concept of how garbage collection works. JavaScript engines apply many optimizations to make it run faster and not introduce any delays into the code execution.
+
+Some of the optimizations:
+
+* **Generational collection** – objects are split into two sets: “new ones” and “old ones”. In typical code, many objects have a short life span: they appear, do their job and die fast, so it makes sense to track new objects and clear the memory from them if that’s the case. Those that survive for long enough, become “old” and are examined less often.
+* **Incremental collection** – if there are many objects, and we try to walk and mark the whole object set at once, it may take some time and introduce visible delays in the execution. So the engine splits the whole set of existing objects into multiple parts. And then clear these parts one after another. There are many small garbage collections instead of a total one. That requires some extra bookkeeping between them to track changes, but we get many tiny delays instead of a big one.
+* **Idle-time collection** – the garbage collector tries to run only while the CPU is idle, to reduce the possible effect on the execution.
+
+There exist other optimizations and flavours of garbage collection algorithms. As much as I’d like to describe them here, I have to hold off, because different engines implement different tweaks and techniques. And, what’s even more important, things change as engines develop, so studying deeper “in advance”, without a real need is probably not worth that. Unless, of course, it is a matter of pure interest.
+
+# Object methods, "this"
+
+Objects are usually created to represent entities of the real world, like users, orders and so on:
+
+```javascript
+let user = {
+  name: "John",
+  age: 30
+};
+```
+
+And, in the real world, a user can  *act* : select something from the shopping cart, login, logout etc.
+
+Actions are represented in JavaScript by functions in properties.
+
+## Method examples
+
+For a start, let’s teach the `user` to say hello:
+
+```javascript
+let user = {
+  name: "John",
+  age: 30
+};
+
+user.sayHi = function() {
+  console.log("Hello!");
+};
+
+user.sayHi(); // Hello!
+```
+
+Here we’ve just used a Function Expression to create a function and assign it to the property `user.sayHi` of the object.
+
+Then we can call it as `user.sayHi()`. The user can now speak!
+
+A function that is a property of an object is called its  *method* .
+
+So, here we’ve got a method `sayHi` of the object `user`.
+
+Of course, we could use a pre-declared function as a method, like this:
+
+```javascript
+let user = {
+  // ...
+};
+
+// first, declare
+function sayHi() {
+  console.log("Hello!");
+}
+
+// then add as a method
+user.sayHi = sayHi;
+
+user.sayHi(); // Hello!
+```
+
+we can call in any of the following way.
+
+```javascript
+let demo={val:()=>{console.log("hello")}}
+demo.val()
+let demo2={val(){console.log("hello")}}
+demo2.val()
+let demo3={val: function(){console.log("hello")}}
+demo3.val()
+function callme(){
+    console.log("callme")
+}
+let demo4={val :callme}
+demo4.val()
+/*
+output:
+hello
+hello
+hello
+callme*/
+```
+
+### Method shorthand
+
+There exists a shorter syntax for methods in an object literal:
+
+```javascript
+// these objects do the same
+
+user = {
+  sayHi: function() {
+    console.log("Hello");
+  }
+};
+
+// method shorthand looks better, right?
+user = {
+  sayHi() { // same as "sayHi: function(){...}"
+    console.log("Hello");
+  }
+};
+```
+
+As demonstrated, we can omit `"function"` and just write `sayHi()`.
+
+To tell the truth, the notations are not fully identical. There are subtle differences related to object inheritance (to be covered later), but for now they do not matter. In almost all cases, the shorter syntax is preferred.
+
+we can also use self invoking function in objects
+
+```javascript
+let demo5={demo:(function () {
+    console.log("hello5")// I will invoke myself
+  })()}
+/*
+output:
+hello5*/
+```
+
+even without calling the object it will print value.
+
+Note:
+
+here demo is not a function so if we call demo5.demo()  it will say as it is not a function.
+
+even we call demo5.demo it will not do any thing.
+
+## “this” in methods
+
+It’s common that an object method needs to access the information stored in the object to do its job.
+
+For instance, the code inside `user.sayHi()` may need the name of the `user`.
+
+**To access the object, a method can use the `this` keyword.**
+
+The value of `this` is the object “before dot”, the one used to call the method.
+
+For instance:
+
+```javascript
+let user = {
+  name: "John",
+  age: 30,
+
+  sayHi() {
+    // "this" is the "current object"
+    console.log(this.name);
+  }
+
+};
+
+user.sayHi(); // John
+```
+
+Here during the execution of `user.sayHi()`, the value of `this` will be `user`.
+
+Technically, it’s also possible to access the object without `this`, by referencing it via the outer variable:
+
+```javascript
+let user = {
+  name: "John",
+  age: 30,
+
+  sayHi() {
+    console.log(user.name); // "user" instead of "this"
+  }
+
+};
+```
+
+…But such code is unreliable. If we decide to copy `user` to another variable, e.g. `admin = user` and overwrite `user` with something else, then it will access the wrong object.
+
+```javascript
+let user = {
+  name: "John",
+  age: 30,
+
+  sayHi() {
+    console.log( user.name ); // leads to an error
+  }
+
+};
+
+
+let admin = user;
+user = null; // overwrite to make things obvious
+
+admin.sayHi(); // TypeError: Cannot read property 'name' of null
+```
+
+If we used `this.name` instead of `user.name` inside the `console.log`, then the code would work.
+
+```javascript
+let user = { name: "John" };
+let admin = { name: "Admin" };
+
+function sayHi() {
+  console.log( this.name );
+}
+
+// use the same function in two objects
+user.f = sayHi;
+admin.f = sayHi;
+
+// these calls have different this
+// "this" inside the function is the object "before the dot"
+user.f(); // John  (this == user)
+admin.f(); // Admin  (this == admin)
+
+admin['f'](); // Admin (dot or square brackets access the method – doesn't matter)
+/*
+output:
+john
+admin
+admin
+*/
+```
+
+The rule is simple: if `obj.f()` is called, then `this` is `obj` during the call of `f`. So it’s either `user` or `admin` in the example above.
+
+## Arrow functions have no “this”
+
+Arrow functions are special: they don’t have their “own” `this`. If we reference `this` from such a function, it’s taken from the outer “normal” function.
+
+For instance, here `arrow()` uses `this` from the outer `user.sayHi()` method:
+
+```javascript
+let user = {
+  firstName: "Ilya",
+  sayHi() {
+    let arrow = () => console.log(this.firstName);
+    arrow();
+  }
+};
+
+user.sayHi(); // Ilya
+```
+
+if we write it as below it will return undefined.
+
+```javascript
+let user = {
+  firstName: "Ilya",
+  sayHi:()=>{
+     console.log(this.firstName);
+  }
+};
+
+user.sayHi(); // Ilya
+```
+
+That’s a special feature of arrow functions, it’s useful when we actually do not want to have a separate `this`, but rather to take it from the outer context.
+
+# Constructor, operator "new"
+
+The regular `{...}` syntax allows us to create one object. But often we need to create many similar objects, like multiple users or menu items and so on.
+
+That can be done using constructor functions and the `"new"` operator.
+
+## Constructor function
+
+Constructor functions technically are regular functions. There are two conventions though:
+
+1. They are named with capital letter first.(optional)
+2. They should be executed only with `"new"` operator.
+
+```javascript
+function User(name) {
+  this.name = name;
+  this.isAdmin = false;
+}
+
+let user = new User("Jack");
+
+console.log(user.name); // Jack
+console.log(user.isAdmin); // false
+```
+
+When a function is executed with `new`, it does the following steps:
+
+1. A new empty object is created and assigned to `this`.
+2. The function body executes. Usually it modifies `this`, adds new properties to it.
+3. The value of `this` is returned.
+
+```javascript
+function User(name) {
+  // this = {};  (implicitly)
+
+  // add properties to this
+  this.name = name;
+  this.isAdmin = false;
+
+  // return this;  (implicitly)
+}
+```
+
+So `let user = new User("Jack")` gives the same result as:
+
+```javascript
+let user = {
+  name: "Jack",
+  isAdmin: false
+};
+```
+
+Now if we want to create other users, we can call `new User("Ann")`, `new User("Alice")` and so on. Much shorter than using literals every time, and also easy to read.
+
+That’s the main purpose of constructors – to implement reusable object creation code.
+
+Let’s note once again – technically, any function (except arrow functions, as they don’t have `this`) can be used as a constructor. It can be run with `new`, and it will execute the algorithm above. The “capital letter first” is a common agreement, to make it clear that a function is to be run with `new`.
+
+we can also use function expression
+
+```javascript
+let User= function(name) {
+  this.name = name;
+  this.isAdmin = false;
+}
+
+let user = new User("Jack");
+
+console.log(user.name); // Jack
+console.log(user.isAdmin); // false
+```
+
+If we have many lines of code all about creation of a single complex object, we can wrap them in an immediately called constructor function, like this:
+
+```javascript
+// create a function and immediately call it with new
+let user = new function() {
+  this.name = "John";
+  this.isAdmin = false;
+
+  // ...other code for user creation
+  // maybe complex logic and statements
+  // local variables etc
+};
+```
+
+This constructor can’t be called again, because it is not saved anywhere, just created and called. So this trick aims to encapsulate the code that constructs the single object, without future reuse.
+
+## Return from constructors
+
+Usually, constructors do not have a `return` statement. Their task is to write all necessary stuff into `this`, and it automatically becomes the result.
+
+But if there is a `return` statement, then the rule is simple:
+
+* If `return` is called with an object, then the object is returned instead of `this`.
+* If `return` is called with a primitive, it’s ignored.
+
+In other words, `return` with an object returns that object, in all other cases `this` is returned.
+
+For instance, here `return` overrides `this` by returning an object:
+
+```javascript
+function BigUser() {
+
+  this.name = "John";
+
+  return { name: "Godzilla" };  // <-- returns this object
+}
+
+console.log( new BigUser().name );  // Godzilla, got that object
+```
+
+And here’s an example with an empty `return` (or we could place a primitive after it, doesn’t matter):
+
+```javascript
+function SmallUser() {
+
+  this.name = "John";
+
+  return; // <-- returns this
+}
+
+console.log( new SmallUser().name );  // John
+```
+
+Usually constructors don’t have a `return` statement. Here we mention the special behavior with returning objects mainly for the sake of completeness.
+
+## Methods in constructor
+
+Using constructor functions to create objects gives a great deal of flexibility. The constructor function may have parameters that define how to construct the object, and what to put in it.
+
+Of course, we can add to `this` not only properties, but methods as well.
+
+For instance, `new User(name)` below creates an object with the given `name` and the method `sayHi`:
+
+```javascript
+function User(name) {
+  this.name = name;
+
+  this.sayHi = function() {
+    console.log( "My name is: " + this.name );
+  };
+}
+
+let john = new User("John");
+
+john.sayHi(); // My name is: John
+
+/*
+john = {
+   name: "John",
+   sayHi: function() { ... }
+}
+*/
+```
+
+To create complex objects, there’s a more advanced syntax, [classes](https://javascript.info/classes), that we’ll cover later.
+
+# Optional chaining '?.'
+
+Note: it is added in recent addition for old browser we need to use polyfills.
+
+The optional chaining `?.` is a safe way to access nested object properties, even if an intermediate property doesn’t exist.
+
+## The “non-existing property” problem
+
+If you’ve just started to read the tutorial and learn JavaScript, maybe the problem hasn’t touched you yet, but it’s quite common.
+
+As an example, let’s say we have `user` objects that hold the information about our users.
+
+Most of our users have addresses in `user.address` property, with the street `user.address.street`, but some did not provide them.
+
+In such case, when we attempt to get `user.address.street`, and the user happens to be without an address, we get an error:
+
+```javascript
+let user = {}; // a user without "address" property
+
+console.log(user.address.street); // Error!
+```
+
+That’s the expected result. JavaScript works like this. As `user.address` is `undefined`, an attempt to get `user.address.street` fails with an error.
+
+In many practical cases we’d prefer to get `undefined` instead of an error here (meaning “no street”).
+
+How can we do this?
+
+The obvious solution would be to check the value using `if` or the conditional operator `?`, before accessing its property, like this:
+
+```javascript
+let user = {};
+
+console.log(user.address ? user.address.street : undefined);
+```
+
+It works, there’s no error… But it’s quite inelegant. As you can see, the `"user.address"` appears twice in the code.
+
+For more deeply nested properties, it becomes even uglier, as more repetitions are required.
+
+E.g. let’s get `user.address.street.name` in a similar fashion.
+
+```javascript
+let user = {}; // user has no address
+
+console.log(user.address ? user.address.street ? user.address.street.name : null : null);
+```
+
+That’s just awful, one may even have problems understanding such code.
+
+There’s a little better way to write it, using the `&&` operator:
+
+```javascript
+let user = {}; // user has no address
+
+console.log( user.address && user.address.street && user.address.street.name ); // undefined (no error)
+```
+
+AND’ing the whole path to the property ensures that all components exist (if not, the evaluation stops), but also isn’t ideal.
+
+As you can see, property names are still duplicated in the code. E.g. in the code above, `user.address` appears three times.
+
+That’s why the optional chaining `?.` was added to the language. To solve this problem once and for all!
+
+## Optional chaining
+
+The optional chaining `?.` stops the evaluation if the value before `?.` is `undefined` or `null` and returns `undefined`.
+
+**Further in this article, for brevity, we’ll be saying that something “exists” if it’s not `null` and not `undefined`.**
+
+In other words, `value?.prop`:
+
+* works as `value.prop`, if `value` exists,
+* otherwise (when `value` is `undefined/null`) it returns `undefined`.
+
+Here’s the safe way to access `user.address.street` using `?.`:
+
+```javascript
+let user = {}; // user has no address
+
+console.log( user?.address?.street ); // undefined (no error)
+```
+
+```javascript
+let user = null;
+
+console.log( user?.address ); // undefined
+console.log( user?.address.street ); // undefined
+```
+
+Please note: the `?.` syntax makes optional the value before it, but not any further.
+
+E.g. in `user?.address.street.name` the `?.` allows `user` to safely be `null/undefined` (and returns `undefined` in that case), but that’s only for `user`. Further properties are accessed in a regular way. If we want some of them to be optional, then we’ll need to replace more `.` with `?.`.
+
+**Don’t overuse the optional chaining**
+
+We should use `?.` only where it’s ok that something doesn’t exist.
+
+For example, if according to our code logic `user` object must exist, but `address` is optional, then we should write `user.address?.street`, but not `user?.address?.street`.
+
+Then, if `user` happens to be undefined, we’ll see a programming error about it and fix it. Otherwise, if we overuse `?.`, coding errors can be silenced where not appropriate, and become more difficult to debug.
+
+**The variable before** `?.` **must be declared**
+
+If there’s no variable `user` at all, then `user?.anything` triggers an error:
+
+```javascript
+// ReferenceError: user is not defined
+user?.address;
+```
+
+The variable must be declared (e.g. `let/const/var user` or as a function parameter). The optional chaining works only for declared variables.
+
+## Short-circuiting
+
+As it was said before, the `?.` immediately stops (“short-circuits”) the evaluation if the left part doesn’t exist.
+
+So, if there are any further function calls or operations to the right of `?.`, they won’t be made.
+
+For instance:
+
+```javascript
+let user = null;
+let x = 0;
+
+user?.sayHi(x++); // no "user", so the execution doesn't reach sayHi call and x++
+
+console.log(x); // 0, value not incremented
+```
+
+## Other variants: ?.(), ?.[]
+
+The optional chaining `?.` is not an operator, but a special syntax construct, that also works with functions and square brackets.
+
+For example, `?.()` is used to call a function that may not exist.
+
+In the code below, some of our users have `admin` method, and some don’t:
+
+```javascript
+let userAdmin = {
+  admin() {
+    console.log("I am admin");
+  }
+};
+
+let userGuest = {};
+
+userAdmin.admin?.(); // I am admin
+
+userGuest.admin?.(); // nothing happens (no such method)
+```
+
+Here, in both lines we first use the dot (`userAdmin.admin`) to get `admin` property, because we assume that the `user` object exists, so it’s safe read from it.
+
+Then `?.()` checks the left part: if the `admin` function exists, then it runs (that’s so for `userAdmin`). Otherwise (for `userGuest`) the evaluation stops without errors.
+
+The `?.[]` syntax also works, if we’d like to use brackets `[]` to access properties instead of dot `.`. Similar to previous cases, it allows to safely read a property from an object that may not exist.
+
+```javascript
+let key = "firstName";
+
+let user1 = {
+  firstName: "John"
+};
+
+let user2 = null;
+
+console.log( user1?.[key] ); // John
+console.log( user2?.[key] ); // undefined
+```
+
+Also we can use `?.` with `delete`:
+
+```javascript
+delete user?.name; // delete user.name if user exists
+```
+
+**We can use** `?.` **for safe reading and deleting, but not writing**
+
+The optional chaining `?.` has no use on the left side of an assignment.
+
+For example:
+
+```javascript
+let user = null;
+
+user?.name = "John"; // Error, doesn't work
+// because it evaluates to: undefined = "John"
+```
+
+# JavaScript Symbol
+
+The JavaScript Symbol is a function that is used to identify the object properties.
+
+## Points to remember
+
+1. A Symbol() method always return a unique value.
+2. A symbol value may be used as an identifier for object properties.
+3. Symbols are immutable, just like numbers or strings.
+4. Symbols cannot be typecasted to primitive data types.
+
+## Syntax
+
+1. Symbol([description])

@@ -1,13 +1,8 @@
 let user = {
-  name: "John",
-  toString() {
-    return this.name;
+  set fullName(name) {
+    this.demoname = name;
   }
 };
 
-Object.defineProperty(user, "toString", {
-  enumerable: false,
-});
-
-// Now our toString disappears:
-for (let key in user) console.log(key); 
+user.fullName = "Test"; // Error (property has only a getter)
+console.log(user.demoname);

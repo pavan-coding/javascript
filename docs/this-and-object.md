@@ -1778,7 +1778,6 @@ console.log(doublePrices.meat); // 8
 
 It may look difficult at first sight, but becomes easy to understand after you use it once or twice. We can make powerful chains of transforms this way.
 
-
 # Property flags and descriptors
 
 As we know, objects can store properties.
@@ -2083,3 +2082,31 @@ There are also methods that limit access to the *whole* object:
 [Object.isExtensible(obj)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isExtensible)Returns `false` if adding properties is forbidden, otherwise `true`
 
 .[Object.isSealed(obj)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isSealed)Returns `true` if adding/removing properties is forbidden, and all existing properties have `configurable: false`.[Object.isFrozen(obj)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/isFrozen)Returns `true` if adding/removing/changing properties is forbidden, and all current properties are `configurable: false, writable: false`.These methods are rarely used in practice.
+
+# Property getters and setters
+
+There are two kinds of object properties.
+
+The first kind is  *data properties* . We already know how to work with them. All properties that we’ve been using until now were data properties.
+
+The second type of property is something new. It’s an  *accessor property* . They are essentially functions that execute on getting and setting a value, but look like regular properties to an external code.
+
+## Getters and setters
+
+Accessor properties are represented by “getter” and “setter” methods. In an object literal they are denoted by `get` and `set`:
+
+```javascript
+let obj = {
+  get propName() {
+    // getter, the code executed on getting obj.propName
+  },
+
+  set propName(value) {
+    // setter, the code executed on setting obj.propName = value
+  }
+};
+```
+
+The getter works when `obj.propName` is read, the setter – when it is assigned.
+
+For instance, we have a `user` object with `name` and `surname`:

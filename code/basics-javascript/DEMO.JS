@@ -1,8 +1,14 @@
-let user = {
-  set fullName(name) {
-    this.demoname = name;
-  }
+let animal = {
+  eats: true
 };
 
-user.fullName = "Test"; // Error (property has only a getter)
-console.log(user.demoname);
+function Rabbit(name) {
+  this.name = name;
+}
+
+Rabbit.prototype = animal;
+
+let rabbit = new Rabbit("White Rabbit"); //  rabbit.__proto__ == animal
+let dem=new Rabbit("this is demo ")
+console.log( rabbit.eats ); // true
+console.log(dem.eats)
